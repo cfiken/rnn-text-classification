@@ -5,12 +5,14 @@ name = "pypi"
 
 [packages]
 numpy = "*"
-matplotlib = "*"
-tensorflow = "*"
 jupyter = "*"
 jupyter-contrib-nbextensions = "*"
+ipython = "*"
+matplotlib = "*"
+tensorflow = {file = "https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.9.0-py3-none-any.whl"}
+bunch = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.6"
+python_version = "3.6.5"

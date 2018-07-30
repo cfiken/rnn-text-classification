@@ -1,11 +1,11 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0853d1207f5ec8af46931093fce294fadd16495463c6352eeaafc583c26618b6"
+            "sha256": "e61f599d693388e7df813772e9cc6c75cd041f4ff467b7a4d6442f9187d8f040"
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_version": "3.6"
+            "python_version": "3.6.5"
         },
         "sources": [
             {
@@ -18,9 +18,9 @@
     "default": {
         "absl-py": {
             "hashes": [
-                "sha256:e0eb8358b549552b1cc5972350bc3e41dd0a926c15b3ff95ce60f3c78c80824c"
+                "sha256:fcb729e9a3cf1a8f88f6c3a6465859c42116f23e1feb6208825eb88f3fd2b880"
             ],
-            "version": "==0.2.2"
+            "version": "==0.3.0"
         },
         "appnope": {
             "hashes": [
@@ -51,6 +51,14 @@
                 "sha256:eb7386f632349d10d9ce9d4a838b134d4731571851149f9cc2c05a9a837a9a44"
             ],
             "version": "==2.1.3"
+        },
+        "bunch": {
+            "hashes": [
+                "sha256:3c554816ba260634b55c1edf8de6467d8122dbd18ec20f323e181869bc48ac93",
+                "sha256:50c77a0fc0cb372dfe48b5e11937d5f70e743adbf42683f3a6d2857645a76aaa"
+            ],
+            "index": "pypi",
+            "version": "==1.0.1"
         },
         "cycler": {
             "hashes": [
@@ -136,7 +144,7 @@
                 "sha256:a0c96853549b246991046f32d19db7140f5b1a644cc31f0dc1edc86713b7676f",
                 "sha256:eca537aa61592aca2fef4adea12af8e42f5c335004dfa80c78caf80e8b525e5c"
             ],
-            "markers": "python_version >= '3.3'",
+            "index": "pypi",
             "version": "==6.4.0"
         },
         "ipython-genutils": {
@@ -148,10 +156,10 @@
         },
         "ipywidgets": {
             "hashes": [
-                "sha256:3ce93db970a94f06f38121da70757cdbcce884ecd14f79a4dd9bc49a47e0f33b",
-                "sha256:eeb188429070aa3ce16e5e6e744437614e8315b5097d6cf31b0e83fb7a5a6342"
+                "sha256:23ad9fdbaca5aa0876a2a4d07f19c71b6253821fb6284018edd8e7fb34a37806",
+                "sha256:931cea376239cc1a3e3d3aafd6d4055802f3dfb56ad3ccd26f79e59f2c712a1a"
             ],
-            "version": "==7.3.0"
+            "version": "==7.3.1"
         },
         "jedi": {
             "hashes": [
@@ -588,6 +596,7 @@
             "version": "==1.9.0"
         },
         "tensorflow": {
+            "file": "https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.9.0-py3-none-any.whl",
             "hashes": [
                 "sha256:01fca4d85855131c874cff811e0786f240e7270d5dfa699883bde60f550752b6",
                 "sha256:22d71e13947b85ca8fb625db4d7094c68ebc014fee911db9d658205965268980",
@@ -672,15 +681,15 @@
                 "sha256:0a2e54558a0628f2145d2fc822137e322412115173e8a2ddbe1c9024338ae83c",
                 "sha256:80044e51ec5bbf6c894ba0bc48d26a8c20a9ba629f4ca19ea26ecfcf87685f5f"
             ],
-            "markers": "python_version >= '3'",
+            "markers": "python_version != '3.3.*' and python_version >= '2.7' and python_version != '3.1.*' and python_version != '3.2.*' and python_version != '3.0.*'",
             "version": "==0.31.1"
         },
         "widgetsnbextension": {
             "hashes": [
-                "sha256:af7412053b646a5372278bf772714543acdd6e0ad87f18171ba6a0c9009e3114",
-                "sha256:c5280a62d293735cdadc7b8884e2affcfb0488420ee09963577f042359726392"
+                "sha256:8ee8a4a1ab8492412a1411652127775c6d2841e9a8030c4b8c6c7ce7792918c6",
+                "sha256:8f8d79e18f36a434da32365169a50a4acbc5a454da38aeb96a66cd3191e297b5"
             ],
-            "version": "==3.3.0"
+            "version": "==3.3.1"
         }
     },
     "develop": {}
