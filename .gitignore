@@ -1,4 +1,4 @@
 .ipynb*
 .DS_Store
-checkpoints
+checkpoints*
 logs
