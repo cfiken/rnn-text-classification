@@ -6,7 +6,10 @@ import re
 import json
 import pickle
 from typing import List, Tuple, Dict, Callable, Optional, Any, Sequence, Mapping, NamedTuple
+from collections import Counter
 import numpy as np
+
+from utils.config import Config
 
 class PTBDataSource:
     
@@ -39,7 +42,7 @@ class PTBDataSource:
             fd = {
                 model.inputs: inputs[batch_range],
                 model.inputs_length: inputs_length[batch_range],
-                model.target_ids: target_ids[batch_range]1
+                model.target_ids: target_ids[batch_range]
             }
             batch_list.append(fd)
         return batch_list
