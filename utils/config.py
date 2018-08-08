@@ -4,6 +4,7 @@ class Config(NamedTuple):
     num_units: int = 512
     num_layers: int = 6
     num_heads: int = 8
+    num_outputs: int = 10000
     embedding_size = 512
     batch_size: int = 128
     max_length: int = 50
