@@ -69,11 +69,21 @@ class PTBDataSource:
             batch_range = range(index_from, index_to)
             fd = {
                 model.is_training: True,
-                model.inputs: inputs[batch_range],
+                model.inputs_data: inputs[batch_range],
                 model.target_classes: target_ids[batch_range]
             }
             batch_list.append(fd)
         return batch_list
+
+    def feed_test_transformer(self, model):
+        test_data = random.sample(self.test, 256)
+        inputs, inputs_length, target_ids = self._make_feed_list(test_data)
+        fd = {
+            model.is_training: False,
+            model.inputs_data: inputs,
+            model.target_classes: target_ids
+        }
+        return fd
 
     def _make_feed_list(self, data):
         inputs = []
