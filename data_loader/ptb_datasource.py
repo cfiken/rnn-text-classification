@@ -80,8 +80,8 @@ class PTBDataSource:
         inputs, inputs_length, target_ids = self._make_feed_list(test_data)
         fd = {
             model.is_training: False,
-            model.inputs_data: inputs,
-            model.target_classes: target_ids
+            model.inputs_data: inputs[:256],
+            model.target_classes: target_ids[:256]
         }
         return fd
 
