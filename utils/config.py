@@ -16,6 +16,7 @@ class Config(NamedTuple):
     checkpoint_dir = './checkpoints/'
     data_path: str = './data/'
     log_dir: str = './logs/'
+    scheduled_sampling_rate: float = 0.0
     
     def to_log_dir(self) -> str:
         return self.log_dir + 'layers={}/units={}/lr={}'.format(self.num_layers, self.num_units, self.learning_rate)
