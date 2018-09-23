@@ -103,17 +103,6 @@ class Transformer:
                 training=self.is_training
             )
 
-            sent_encoder_init_state = tf.get_variable(  # [1, hidden_units]
-                'sent_encoder_init_state',
-                dtype=tf.float32,
-                shape=[1, self.config.num_units],
-                initializer=tf.contrib.layers.xavier_initializer()
-            )
-            sent_encoder_inputs_embedded = tf.tile(
-                tf.expand_dims(sent_encoder_init_state, 0),  # [1, 1, hidden_units]
-                [tf.shape(encoder_inputs_embedded)[0], 1, 1]  # [batch_size, 1, hidden_units]
-            )
-
             for i in range(self.config.num_layers):
                 with tf.variable_scope('block_{}'.format(i)):
                     encoder_inputs_embedded = transformer.multihead_attention(
@@ -126,23 +115,13 @@ class Transformer:
                         is_causality=False
                     )
 
-                    sent_encoder_inputs_embedded = transformer.multihead_attention(
-                        queries=sent_encoder_inputs_embedded,
-                        keys=encoder_inputs_embedded,
-                        is_training=self.is_training,
-                        dropout_rate=self.config.dropout_in_rate,
-                        num_units=self.config.num_units,
-                        num_heads=self.config.num_heads,
-                        is_causality=False,
-                        scope='hier_attention'
-                    )
-                    sent_encoder_inputs_embedded = transformer.feedforward(
-                        sent_encoder_inputs_embedded,
+                    encoder_inputs_embedded = transformer.feedforward(
+                        encoder_inputs_embedded,
                         num_units=[4*self.config.num_units, self.config.num_units],
                         scope='hier_feedforward'
                     )
 
-            return sent_encoder_inputs_embedded
+            return encoder_inputs_embedded
 
     def _decoder(self, hier_encoder_inputs_embedded, decoder_inputs):
         with tf.variable_scope('decoder'):
