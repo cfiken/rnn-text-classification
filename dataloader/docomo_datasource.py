@@ -14,12 +14,12 @@ class DocomoDataSource:
         self._create_tokenizer()
 
     def load_data(self):
-        data = json.load(open(os.path.join(self._config.data_path, 'docomo-weight.json'), 'r'))
+        data = json.load(open(os.path.join(self._config.data_path, 'drama.json'), 'r'))
         ask = [s['a'] for s in data['dialogue']]
         res = [s['r'] for s in data['dialogue']]
         return ask, res
 
-    def feed_dict(self, model, batch_size: int):
+    def feed_dict(self, model, batch_size: int, is_transformer: bool=False):
         inputs = []
         inputs_length = []
         targets = []
@@ -33,8 +33,10 @@ class DocomoDataSource:
             end_index = batch_size * (i + 1)
             inputs = self._ask[start_index:end_index]
             targets = self._res[start_index:end_index]
-            d = self._create_dict(model, inputs, targets)
-            
+            if is_transformer:
+                d = self._create_dict_transformer(model, inputs, targets)
+            else:
+                d = self._create_dict(model, inputs, targets)
             batch.append(d)
 
         return batch
@@ -43,6 +45,17 @@ class DocomoDataSource:
         data = list(zip(self._ask, self._res))
         data = np.array(random.sample(data, len(data)))
         self._ask, self._res = data[:, 0], data[:, 1]
+
+    def _create_dict_transformer(self, model, inputs: List[str], targets: List[str]):
+        inputs = self.batch(inputs, suffix=[self.eos_id])
+        decoder_inputs = self.batch(targets, prefix=[self.bos_id])
+        decoder_targets = self.batch(targets, suffix=[self.eos_id])
+        d = {
+            model.encoder_inputs: inputs,
+            model.decoder_inputs: decoder_inputs,
+            model.decoder_targets: decoder_targets,
+        }
+        return d
 
     def _create_dict(self, model, inputs: List[str], targets: List[str]):
         inputs = self.batch(inputs, suffix=[self.eos_id])
@@ -62,7 +75,7 @@ class DocomoDataSource:
         return d
 
     def _create_tokenizer(self):
-        with open('./data/vocab.pkl', 'rb') as f:
+        with open('./data/drama_vocab.pkl', 'rb') as f:
             self._word_to_id, self._id_to_word = pickle.load(f)
 
     def id_list_to_sentence(self, id_list: List[int]):
@@ -74,7 +87,8 @@ class DocomoDataSource:
     def batch(self, batch: List[str], prefix=None, suffix=None):
         prefix = prefix or []
         suffix = suffix or []
-        batch_list = [prefix + self.sentence_to_id_list(b) + suffix for b in batch]
+        max_length = self._config.max_length if (prefix is None and suffix is none) else self._config.max_length - 1
+        batch_list = [prefix + self.sentence_to_id_list(b)[-max_length:] + suffix for b in batch]
         batch_list = [batch + [0] * (self._config.max_length - len(batch)) for batch in batch_list]
         return batch_list
 

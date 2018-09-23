@@ -17,6 +17,7 @@ class Config(NamedTuple):
     data_path: str = './data/'
     log_dir: str = './logs/'
     scheduled_sampling_rate: float = 0.0
+    vocab_size: int = 3278
     
     def to_log_dir(self) -> str:
         return self.log_dir + 'layers={}/units={}/lr={}'.format(self.num_layers, self.num_units, self.learning_rate)
