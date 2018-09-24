@@ -39,7 +39,7 @@ def positional_encoding(
     _, T = inputs.get_shape().as_list()
     N, _ = tf.unstack(tf.shape(inputs))
 
-    position_ind = tf.tile(tf.expand_dims(tf.range(T), 0), [N, 1])
+    position_ind = tf.tile(tf.expand_dims(tf.range(T), 0), [N, 1])  # [batch_size, max_length]
 
     position_enc = np.array([
         [
@@ -50,18 +50,79 @@ def positional_encoding(
     ])
 
     position_enc[:, 0::2] = np.sin(position_enc[:, 0::2])
-    position_enc[:, 1::2] = np.cos(position_enc[:, 1::2])
+    position_enc[:, 1::2] = np.cos(position_enc[:, 1::2])  # [max_length, num_units]
 
     lookup_table = tf.convert_to_tensor(position_enc, dtype=tf.float32)
     outputs = tf.nn.embedding_lookup(lookup_table, position_ind)
 
     if is_zero_pad:
         mask_parts = tf.sign(inputs)
-        masks = tf.tile(tf.expand_dims(mask_parts, -1), [1, 1, num_units])  # [N, T, num_units]
+        masks = tf.tile(tf.expand_dims(mask_parts, -1), [1, 1, num_units])  # [batch_size, num_units, num_units]
         paddings = tf.zeros_like(outputs)
         outputs = tf.where(tf.equal(masks, 0), paddings, outputs)
 
     return outputs
+
+def positional_encoding2(
+        inputs,
+        is_zero_pad: bool=True
+        ):
+    _, length, num_units = inputs.get_shape().as_list()
+    batch_size, _, _ = tf.unstack(tf.shape(inputs))
+
+    position_ind = tf.tile(tf.expand_dims(tf.range(length), 0), [batch_size, 1])  # [batch_size, max_length]
+
+    position_enc = np.array([
+        [
+            pos / np.power(10000, 2. * i / num_units)
+            for i in range(num_units)
+        ]
+        for pos in range(length)
+    ])
+
+    position_enc[:, 0::2] = np.sin(position_enc[:, 0::2])
+    position_enc[:, 1::2] = np.cos(position_enc[:, 1::2])  # [max_length, num_units]
+
+    lookup_table = tf.convert_to_tensor(position_enc, dtype=tf.float32)
+    outputs = tf.nn.embedding_lookup(lookup_table, position_ind)
+
+    if is_zero_pad:
+        mask_parts = tf.sign(tf.reduce_sum(inputs, axis=-1))
+        masks = tf.tile(tf.expand_dims(mask_parts, -1), [1, 1, num_units])  # [batch_size, num_units, num_units]
+        paddings = tf.zeros_like(outputs)
+        outputs = tf.where(tf.equal(masks, 0), paddings, outputs)
+
+    return outputs
+
+
+def step_encoding(
+        inputs,
+        step: int,
+        is_zero_pad: bool=True
+        ):
+    _, max_length, num_units = inputs.get_shape().as_list()
+    batch_size, _, _= tf.unstack(tf.shape(inputs))
+
+    step_enc = np.array(
+        [
+            step / np.power(10000, 2. * i / num_units)
+            for i in range(num_units)
+        ]
+    )
+    step_enc[0::2] = np.sin(step_enc[0::2])
+    step_enc[1::2] = np.cos(step_enc[1::2])  # [num_units]
+
+    outputs = tf.tile(tf.expand_dims(tf.expand_dims(step_enc, 0), 0), [batch_size, max_length, 1])
+
+    if is_zero_pad:
+        mask_parts = tf.sign(tf.reduce_sum(inputs, axis=-1))
+        masks = tf.tile(tf.expand_dims(mask_parts, -1), [1, 1, num_units])  # [batch_size, max_length, num_units]
+        paddings = tf.zeros_like(outputs)
+        outputs = tf.where(tf.equal(masks, 0), paddings, outputs)
+
+    return outputs
+
+
 
 
 def multihead_attention(
