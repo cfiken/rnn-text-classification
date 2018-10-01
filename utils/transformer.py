@@ -112,7 +112,7 @@ def step_encoding(
     step_enc[0::2] = np.sin(step_enc[0::2])
     step_enc[1::2] = np.cos(step_enc[1::2])  # [num_units]
 
-    outputs = tf.tile(tf.expand_dims(tf.expand_dims(step_enc, 0), 0), [batch_size, max_length, 1])
+    outputs = tf.to_float(tf.tile(tf.expand_dims(tf.expand_dims(step_enc, 0), 0), [batch_size, max_length, 1]))
 
     if is_zero_pad:
         mask_parts = tf.sign(tf.reduce_sum(inputs, axis=-1))
